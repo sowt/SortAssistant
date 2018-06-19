@@ -26,6 +26,7 @@ namespace VideoSortAssistant
         HotKeyManager _hotKeyManager;
 
         MappingControls[] _moveMappingItems;
+        MediaInfoProvider _mediaInfo = new MediaInfoProvider();
 
         public AssistantForm()
         {
@@ -112,9 +113,25 @@ namespace VideoSortAssistant
 
         class FileItem
         {
+            TimeSpan? _duration;
             public string Path { get; }
             public long Size { get; }
+            public TimeSpan? Duration
+            {
+                get => _duration;
+                set
+                {
+                    if (_duration != null) throw new InvalidOperationException();
+                    _duration = value;
+                    if (value != null && Size > 0)
+                        Quality = Size / (float) value.Value.TotalSeconds / 7000;
+                    DurationInitialized = true;
+                }
+            }
 
+            public bool DurationInitialized { get; private set; }
+            public float? Quality { get; private set; }
+        
             public FileItem(string path)
             {
                 Path = path;
@@ -126,7 +143,9 @@ namespace VideoSortAssistant
                 var folder = System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(Path));
                 if (folder.Length > 30)
                     folder = folder.Substring(0, 27) + "...";
-                return $"[{folder}] {System.IO.Path.GetFileName(Path)}";
+                return
+                    $"[{folder}] {System.IO.Path.GetFileName(Path)} | {FormatSize(Size)}" +
+                    $"{(Duration != null ? " | " + (int) Duration.Value.TotalMinutes + "m" : "")} {(Quality != null ? " | Q" + (Quality.Value).ToString("F0") : "")}";
             }
         }
 
@@ -148,8 +167,7 @@ namespace VideoSortAssistant
             if (item != null)
             {
                 FullPathBox.Text = item.Path;
-                long mbs = item.Size / MB;
-                SizeBox.Text = (mbs >= 250) ? ((mbs / 1024f).ToString("F2") + " GB") : (mbs + " MB");
+                SizeBox.Text = FormatSize(item.Size);
                 MoveCurrentTo.Enabled = true;
                 OpenButton.Enabled = true;
                 OpenDirButton.Enabled = true;
@@ -162,6 +180,13 @@ namespace VideoSortAssistant
                 OpenButton.Enabled = false;
                 OpenDirButton.Enabled = false;
             }
+        }
+
+        static string FormatSize(long size)
+        {
+            long mbs = size / MB;
+            var formattedSize = (mbs >= 250) ? ((mbs / 1024f).ToString("F2") + " GB") : (mbs + " MB");
+            return formattedSize;
         }
 
         private void FileList_DoubleClick(object sender, EventArgs e)
@@ -870,6 +895,29 @@ namespace VideoSortAssistant
         {
             UnregisterHotkeys();
             RegisterHotkeys();
+        }
+
+        private void SortByQualityButton_Click(object sender, EventArgs e)
+        {
+            FileItem currentItem = (FileItem) FileList.SelectedItem;
+            foreach (var el in FileList.Items.Cast<FileItem>())
+            {
+                if (!el.DurationInitialized)
+                    el.Duration = _mediaInfo.GetDuration(el.Path);
+            }
+            var items = FileList.Items.Cast<FileItem>()
+                .OrderBy(x => x.Quality != null ? 0 : 1)
+                .ThenByDescending(x => 
+                                       x.Size <= 100 * MB ? -1 : x.Size / (MB * 512))
+                .ThenByDescending(x => 
+                                      x.Quality != null ? (long)(x.Quality) : -1)
+                .ThenBy(x => x.Path)
+                .ThenByDescending(x => x.Size)
+                .Cast<object>().ToArray();
+            FileList.Items.Clear();
+            FileList.Items.AddRange(items);
+            if (currentItem != null)
+                FileList.SelectedIndex = Array.IndexOf(items, currentItem);
         }
     }
 }

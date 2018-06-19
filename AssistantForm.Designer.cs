@@ -51,6 +51,8 @@
             this.AlphabeticalSortButton = new System.Windows.Forms.Button();
             this.FileList = new System.Windows.Forms.ListBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label13 = new System.Windows.Forms.Label();
+            this.FixBindingsButton = new System.Windows.Forms.Button();
             this.PlaceholderBrowse = new System.Windows.Forms.Button();
             this.OponWithBrowse = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
@@ -94,8 +96,8 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.Log = new System.Windows.Forms.TextBox();
             this.SaveSettingsTimer = new System.Windows.Forms.Timer(this.components);
-            this.FixBindingsButton = new System.Windows.Forms.Button();
-            this.label13 = new System.Windows.Forms.Label();
+            this.SortByQualityButton = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -225,12 +227,14 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.SortByQualityButton);
             this.splitContainer1.Panel1.Controls.Add(this.ShuffleButton);
             this.splitContainer1.Panel1.Controls.Add(this.SnapSizeSortButton);
             this.splitContainer1.Panel1.Controls.Add(this.label8);
             this.splitContainer1.Panel1.Controls.Add(this.ResetButton);
             this.splitContainer1.Panel1.Controls.Add(this.AddPathRecButton);
             this.splitContainer1.Panel1.Controls.Add(this.AppendButton);
+            this.splitContainer1.Panel1.Controls.Add(this.button2);
             this.splitContainer1.Panel1.Controls.Add(this.AlphabeticalSortButton);
             // 
             // splitContainer1.Panel2
@@ -243,9 +247,9 @@
             // ShuffleButton
             // 
             this.ShuffleButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ShuffleButton.Location = new System.Drawing.Point(506, 5);
+            this.ShuffleButton.Location = new System.Drawing.Point(563, 0);
             this.ShuffleButton.Name = "ShuffleButton";
-            this.ShuffleButton.Size = new System.Drawing.Size(47, 23);
+            this.ShuffleButton.Size = new System.Drawing.Size(43, 23);
             this.ShuffleButton.TabIndex = 43;
             this.ShuffleButton.Text = "shuffle";
             this.ShuffleButton.UseVisualStyleBackColor = true;
@@ -254,7 +258,7 @@
             // SnapSizeSortButton
             // 
             this.SnapSizeSortButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.SnapSizeSortButton.Location = new System.Drawing.Point(426, 5);
+            this.SnapSizeSortButton.Location = new System.Drawing.Point(425, -1);
             this.SnapSizeSortButton.Name = "SnapSizeSortButton";
             this.SnapSizeSortButton.Size = new System.Drawing.Size(36, 23);
             this.SnapSizeSortButton.TabIndex = 39;
@@ -265,7 +269,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(392, 8);
+            this.label8.Location = new System.Drawing.Point(387, 3);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(32, 15);
             this.label8.TabIndex = 42;
@@ -304,7 +308,7 @@
             // AlphabeticalSortButton
             // 
             this.AlphabeticalSortButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.AlphabeticalSortButton.Location = new System.Drawing.Point(465, 5);
+            this.AlphabeticalSortButton.Location = new System.Drawing.Point(521, -3);
             this.AlphabeticalSortButton.Name = "AlphabeticalSortButton";
             this.AlphabeticalSortButton.Size = new System.Drawing.Size(35, 23);
             this.AlphabeticalSortButton.TabIndex = 40;
@@ -378,6 +382,25 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Setup";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(14, 348);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(121, 15);
+            this.label13.TabIndex = 109;
+            this.label13.Text = "Bindings don\'t work?";
+            // 
+            // FixBindingsButton
+            // 
+            this.FixBindingsButton.Location = new System.Drawing.Point(139, 343);
+            this.FixBindingsButton.Name = "FixBindingsButton";
+            this.FixBindingsButton.Size = new System.Drawing.Size(75, 23);
+            this.FixBindingsButton.TabIndex = 108;
+            this.FixBindingsButton.Text = "Fix";
+            this.FixBindingsButton.UseVisualStyleBackColor = true;
+            this.FixBindingsButton.Click += new System.EventHandler(this.FixBindingsButton_Click);
             // 
             // PlaceholderBrowse
             // 
@@ -806,24 +829,27 @@
             // 
             this.SaveSettingsTimer.Tick += new System.EventHandler(this.SaveSettingsTimer_Tick);
             // 
-            // FixBindingsButton
+            // SortByQualityButton
             // 
-            this.FixBindingsButton.Location = new System.Drawing.Point(139, 343);
-            this.FixBindingsButton.Name = "FixBindingsButton";
-            this.FixBindingsButton.Size = new System.Drawing.Size(75, 23);
-            this.FixBindingsButton.TabIndex = 108;
-            this.FixBindingsButton.Text = "Fix";
-            this.FixBindingsButton.UseVisualStyleBackColor = true;
-            this.FixBindingsButton.Click += new System.EventHandler(this.FixBindingsButton_Click);
+            this.SortByQualityButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.SortByQualityButton.Location = new System.Drawing.Point(460, 0);
+            this.SortByQualityButton.Name = "SortByQualityButton";
+            this.SortByQualityButton.Size = new System.Drawing.Size(66, 23);
+            this.SortByQualityButton.TabIndex = 44;
+            this.SortByQualityButton.Text = "size->quality";
+            this.SortByQualityButton.UseVisualStyleBackColor = true;
+            this.SortByQualityButton.Click += new System.EventHandler(this.SortByQualityButton_Click);
             // 
-            // label13
+            // button2
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(14, 348);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(121, 15);
-            this.label13.TabIndex = 109;
-            this.label13.Text = "Bindings don\'t work?";
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.button2.Location = new System.Drawing.Point(526, 0);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(35, 23);
+            this.button2.TabIndex = 40;
+            this.button2.Text = "path";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.AlphabeticalSortButton_Click);
             // 
             // AssistantForm
             // 
@@ -929,6 +955,8 @@
         private System.Windows.Forms.Button PlaceholderBrowse;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Button FixBindingsButton;
+        private System.Windows.Forms.Button SortByQualityButton;
+        private System.Windows.Forms.Button button2;
     }
 }
 
