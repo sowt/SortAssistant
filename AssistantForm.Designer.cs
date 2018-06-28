@@ -42,12 +42,18 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.label15 = new System.Windows.Forms.Label();
+            this.MinSizeMbBox = new System.Windows.Forms.NumericUpDown();
+            this.label14 = new System.Windows.Forms.Label();
+            this.MinQualityBox = new System.Windows.Forms.NumericUpDown();
+            this.SortByQualityButton = new System.Windows.Forms.Button();
             this.ShuffleButton = new System.Windows.Forms.Button();
             this.SnapSizeSortButton = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.ResetButton = new System.Windows.Forms.Button();
             this.AddPathRecButton = new System.Windows.Forms.Button();
             this.AppendButton = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.AlphabeticalSortButton = new System.Windows.Forms.Button();
             this.FileList = new System.Windows.Forms.ListBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
@@ -96,8 +102,6 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.Log = new System.Windows.Forms.TextBox();
             this.SaveSettingsTimer = new System.Windows.Forms.Timer(this.components);
-            this.SortByQualityButton = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -108,6 +112,8 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MinSizeMbBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MinQualityBox)).BeginInit();
             this.tabPage3.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.SuspendLayout();
@@ -227,6 +233,10 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.label15);
+            this.splitContainer1.Panel1.Controls.Add(this.MinSizeMbBox);
+            this.splitContainer1.Panel1.Controls.Add(this.label14);
+            this.splitContainer1.Panel1.Controls.Add(this.MinQualityBox);
             this.splitContainer1.Panel1.Controls.Add(this.SortByQualityButton);
             this.splitContainer1.Panel1.Controls.Add(this.ShuffleButton);
             this.splitContainer1.Panel1.Controls.Add(this.SnapSizeSortButton);
@@ -243,6 +253,61 @@
             this.splitContainer1.Size = new System.Drawing.Size(869, 766);
             this.splitContainer1.SplitterDistance = 25;
             this.splitContainer1.TabIndex = 37;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(736, 4);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(77, 15);
+            this.label15.TabIndex = 49;
+            this.label15.Text = "Min Size MB";
+            // 
+            // MinSizeMbBox
+            // 
+            this.MinSizeMbBox.Location = new System.Drawing.Point(819, 4);
+            this.MinSizeMbBox.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.MinSizeMbBox.Name = "MinSizeMbBox";
+            this.MinSizeMbBox.Size = new System.Drawing.Size(36, 20);
+            this.MinSizeMbBox.TabIndex = 48;
+            this.MinSizeMbBox.ValueChanged += new System.EventHandler(this.MinSizeMbBox_ValueChanged);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(614, 4);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(68, 15);
+            this.label14.TabIndex = 47;
+            this.label14.Text = "Min Quality";
+            // 
+            // MinQualityBox
+            // 
+            this.MinQualityBox.Location = new System.Drawing.Point(688, 3);
+            this.MinQualityBox.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.MinQualityBox.Name = "MinQualityBox";
+            this.MinQualityBox.Size = new System.Drawing.Size(36, 20);
+            this.MinQualityBox.TabIndex = 46;
+            this.MinQualityBox.ValueChanged += new System.EventHandler(this.MinQualityBox_ValueChanged);
+            // 
+            // SortByQualityButton
+            // 
+            this.SortByQualityButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.SortByQualityButton.Location = new System.Drawing.Point(460, 0);
+            this.SortByQualityButton.Name = "SortByQualityButton";
+            this.SortByQualityButton.Size = new System.Drawing.Size(66, 23);
+            this.SortByQualityButton.TabIndex = 44;
+            this.SortByQualityButton.Text = "size->quality";
+            this.SortByQualityButton.UseVisualStyleBackColor = true;
+            this.SortByQualityButton.Click += new System.EventHandler(this.SortByQualityButton_Click);
             // 
             // ShuffleButton
             // 
@@ -304,6 +369,17 @@
             this.AppendButton.Text = "Add files...";
             this.AppendButton.UseVisualStyleBackColor = true;
             this.AppendButton.Click += new System.EventHandler(this.AppendButton_Click);
+            // 
+            // button2
+            // 
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.button2.Location = new System.Drawing.Point(526, 0);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(35, 23);
+            this.button2.TabIndex = 40;
+            this.button2.Text = "path";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.AlphabeticalSortButton_Click);
             // 
             // AlphabeticalSortButton
             // 
@@ -829,28 +905,6 @@
             // 
             this.SaveSettingsTimer.Tick += new System.EventHandler(this.SaveSettingsTimer_Tick);
             // 
-            // SortByQualityButton
-            // 
-            this.SortByQualityButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.SortByQualityButton.Location = new System.Drawing.Point(460, 0);
-            this.SortByQualityButton.Name = "SortByQualityButton";
-            this.SortByQualityButton.Size = new System.Drawing.Size(66, 23);
-            this.SortByQualityButton.TabIndex = 44;
-            this.SortByQualityButton.Text = "size->quality";
-            this.SortByQualityButton.UseVisualStyleBackColor = true;
-            this.SortByQualityButton.Click += new System.EventHandler(this.SortByQualityButton_Click);
-            // 
-            // button2
-            // 
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button2.Location = new System.Drawing.Point(526, 0);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(35, 23);
-            this.button2.TabIndex = 40;
-            this.button2.Text = "path";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.AlphabeticalSortButton_Click);
-            // 
             // AssistantForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -878,6 +932,8 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.MinSizeMbBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MinQualityBox)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.tabPage2.ResumeLayout(false);
@@ -957,6 +1013,10 @@
         private System.Windows.Forms.Button FixBindingsButton;
         private System.Windows.Forms.Button SortByQualityButton;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.NumericUpDown MinSizeMbBox;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.NumericUpDown MinQualityBox;
     }
 }
 

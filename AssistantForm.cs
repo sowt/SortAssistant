@@ -31,6 +31,7 @@ namespace VideoSortAssistant
         public AssistantForm()
         {
             InitializeComponent();
+            _sorter = RefreshFiltering;
         }
 
         string FormatKeyName(MoveMappingData data)
@@ -75,6 +76,7 @@ namespace VideoSortAssistant
                         AddFile(f);
                     }
                 }
+                _sorter();
             }
             finally
             {
@@ -90,8 +92,8 @@ namespace VideoSortAssistant
             if (FileList.SelectedIndex == -1) FileList.SelectedIndex = 0;
         }
 
-        readonly HashSet<string> _files = new HashSet<string>();
-
+        readonly Dictionary<string,FileItem> _files = new Dictionary<string,FileItem>();
+        
         void ClearItems()
         {
             _files.Clear();
@@ -100,7 +102,8 @@ namespace VideoSortAssistant
 
         void AddItem(FileItem fileItem)
         {
-            if (!_files.Add(fileItem.Path)) return;
+            if (_files.ContainsKey(fileItem.Path)) return;
+            _files.Add(fileItem.Path, fileItem);
             FileList.Items.Add(fileItem);
         }
 
@@ -490,7 +493,10 @@ namespace VideoSortAssistant
         {
             int prevIndex = FileList.SelectedIndex;
             if (prevIndex < 0) prevIndex = 0;
-            FileList.Items.Insert(prevIndex, new FileItem(current));
+            var fileItem = new FileItem(current);
+            FileList.Items.Insert(prevIndex, fileItem);
+            if (!_files.ContainsKey(current))
+                _files.Add(current, fileItem);
             FileList.SelectedIndex = prevIndex;
             OpenAt(prevIndex);
         }
@@ -662,6 +668,7 @@ namespace VideoSortAssistant
                     else
                         AddFile(f);
                 }
+                _sorter();
             }
         }
 
@@ -678,8 +685,9 @@ namespace VideoSortAssistant
 
         private void SnapSortButton_Click(object sender, EventArgs e)
         {
+            _sorter = () => SnapSortButton_Click(null, EventArgs.Empty);
             FileItem currentItem = (FileItem)FileList.SelectedItem;
-            var items = FileList.Items.Cast<FileItem>()
+            var items = GetFilteredItems()
                 .OrderByDescending(x => x.Size >= 10 * MB ? int.MaxValue : x.Size) // group big elements on top (small elements will be 1/per group so no thenby for them)
                 .ThenByDescending(x => x.Size >= 64 * MB ? int.MaxValue : x.Size / (MB * 16)) // split and order those big elements and make new group of bigger elemenets on top
                 .ThenByDescending(x => x.Size >= 128 * MB ? int.MaxValue : x.Size / (MB * 32)) // same
@@ -697,8 +705,9 @@ namespace VideoSortAssistant
 
         private void AlphabeticalSortButton_Click(object sender, EventArgs e)
         {
+            _sorter = () => AlphabeticalSortButton_Click(null, EventArgs.Empty);
             FileItem currentItem = (FileItem)FileList.SelectedItem;
-            var items = FileList.Items.Cast<FileItem>().OrderBy(x => x.Path).Cast<object>().ToArray();
+            var items = GetFilteredItems().OrderBy(x => x.Path).Cast<object>().ToArray();
             FileList.Items.Clear();
             FileList.Items.AddRange(items);
             if (currentItem != null)
@@ -707,8 +716,9 @@ namespace VideoSortAssistant
 
         private void ShuffleButton_Click(object sender, EventArgs e)
         {
+            _sorter = () => ShuffleButton_Click(null, EventArgs.Empty);
             FileItem currentItem = (FileItem)FileList.SelectedItem;
-            var items = FileList.Items.Cast<FileItem>().Shuffle().Cast<object>().ToArray();
+            var items = GetFilteredItems().Shuffle().Cast<object>().ToArray();
             FileList.Items.Clear();
             FileList.Items.AddRange(items);
             if (currentItem != null)
@@ -720,6 +730,7 @@ namespace VideoSortAssistant
             if (FolderBrowser.ShowDialog() == DialogResult.OK)
             {
                 AddDirectory(FolderBrowser.SelectedPath);
+                _sorter();
             }
         }
 
@@ -865,6 +876,8 @@ namespace VideoSortAssistant
             }
         }
 
+        Action _sorter;
+
         private void AssistantForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (Volatile.Read(ref _tasks) > 0)
@@ -899,13 +912,15 @@ namespace VideoSortAssistant
 
         private void SortByQualityButton_Click(object sender, EventArgs e)
         {
+            _sorter = () => SortByQualityButton_Click(null, EventArgs.Empty);
             FileItem currentItem = (FileItem) FileList.SelectedItem;
-            foreach (var el in FileList.Items.Cast<FileItem>())
+            var files = GetFilteredItems();
+            foreach (var el in files)
             {
                 if (!el.DurationInitialized)
                     el.Duration = _mediaInfo.GetDuration(el.Path);
             }
-            var items = FileList.Items.Cast<FileItem>()
+            var items = files
                 .OrderBy(x => x.Quality != null ? 0 : 1)
                 .ThenByDescending(x => 
                                        x.Size <= 100 * MB ? -1 : x.Size / (MB * 512))
@@ -918,6 +933,44 @@ namespace VideoSortAssistant
             FileList.Items.AddRange(items);
             if (currentItem != null)
                 FileList.SelectedIndex = Array.IndexOf(items, currentItem);
+        }
+
+        private void RefreshFiltering()
+        {
+            FileItem currentItem = (FileItem) FileList.SelectedItem;
+            var files = GetFilteredItems().Cast<object>().ToArray();
+            FileList.Items.Clear();
+            FileList.Items.AddRange(files);
+            if (currentItem != null)
+                FileList.SelectedIndex = Array.IndexOf(files, currentItem);
+        }
+
+        IList<FileItem> GetFilteredItems()
+        {
+            int minSize = (int)Math.Round(MinSizeMbBox.Value * 1024 * 1024);
+            var fileItems = _files.Values.Where(x => x.Size > minSize).ToList();
+
+            int minQuality = (int)Math.Round(MinQualityBox.Value);
+            if (minQuality > 0)
+            {
+                foreach (var el in fileItems)
+                {
+                    if (!el.DurationInitialized)
+                        el.Duration = _mediaInfo.GetDuration(el.Path);
+                }
+                fileItems = fileItems.Where(x => x.Quality > minQuality).ToList();
+            }
+            return fileItems;
+        }
+
+        private void MinQualityBox_ValueChanged(object sender, EventArgs e)
+        {
+            _sorter();
+        }
+
+        private void MinSizeMbBox_ValueChanged(object sender, EventArgs e)
+        {
+            _sorter();
         }
     }
 }
